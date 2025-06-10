@@ -22,7 +22,62 @@
  * * * Add the item's id to the local storage
  * * Make all the items that are listed in the favorites LS save the red background color when the page is reloaded
  */
+    const container = document.querySelector('.cardsContainer')
 
+    function getFavorites() {
+        return JSON.parse(localStorage.getItem('favorites')) || [];
+    }
+
+    function saveFavorites(favorites) {
+        localStorage.setItem('favorites', JSON.stringify(favorites))
+    }
+
+    function addToFavorites(id) {
+        const favorites = getFavorites();
+        if (!favorites.includes(id)) {
+            favorites.push(id);
+            saveFavorites(favorites);
+        }
+    }
+
+    function removeFromFavorites(id) {
+        let favorites = getFavorites();
+        favorites = favorites.filter(favId => favId !== id);
+        saveFavorites(favorites);
+    }
+
+    function applyFavoritesFromStorage() {
+        const favorites = getFavorites();
+        favorites.forEach(id => {
+        const item = document.getElementById(id);
+        if (item && item.classList.contains('card')) {
+            item.style.backgroundColor = 'red';
+        }
+    });
+}
+
+    function handleItemClick(event) {
+        const item = event.target;
+
+        if (!item.classList.contains('card')) return;
+
+        const id = item.id;
+        const favorites = getFavorites();
+        const isInFavorites = favorites.includes(id);
+        const bgColor = item.style.backgroundColor;
+
+        if (!isInFavorites && (bgColor === '' || bgColor === 'white')) {
+            item.style.backgroundColor = 'red';
+            addToFavorites(id);
+        } else if (isInFavorites && bgColor === 'red') {
+            item.style.backgroundColor = 'white';
+            removeFromFavorites(id);
+        }
+    }
+
+container.addEventListener('click', handleItemClick);
+
+applyFavoritesFromStorage();
 /**
  * @hint
  * Here is a plan of how you can structure your code. You can follow it or choose your own way to go
@@ -37,4 +92,4 @@
  * * add the event listener to the container, pass the callback.
  */
 
-// Your code goes here...
+

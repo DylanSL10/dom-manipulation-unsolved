@@ -11,7 +11,7 @@
  * Example: const allItems = <Your code>;
  */
 
-// Your code goes here...
+const allItems = document.querySelectorAll('.item')
 
 
 
@@ -22,7 +22,7 @@
  * Example: const main = <Your code>
  * */
 
-// Your code goes here
+const main = document.getElementById('main')
 
 
 
@@ -33,7 +33,7 @@
  * Example: const favs = <Your code>;
  */
 
-// Your code goes here
+const favs = document.getElementById('favs')
 
 
 
@@ -46,8 +46,31 @@
  * Changes the icon of the element: fa-heart-circle-plus for main, fa-heart-crack for favs items.
  */
 
-// Your code goes here
+function updateCollections(id, direction) {
+  const item = document.getElementById(id);
+  if (!item) return;
 
+  let targetParent;
+  let newIconClass;
+
+  if (direction === 'toFavs') {
+    targetParent = favs;
+    newIconClass = 'fa-heart-crack';
+  } else if (direction === 'toMain') {
+    targetParent = main;
+    newIconClass = 'fa-heart-circle-plus';
+  } else {
+    console.warn('Invalid direction:', direction);
+    return;
+  }
+
+  targetParent.appendChild(item);
+
+  const icon = item.querySelector('i');
+  if (icon) {
+    icon.className = `fa-solid ${newIconClass}`;
+  }
+}
 
 
 /**
@@ -64,6 +87,14 @@
  * * Make the updateCollections function call, assign the item Id and the direction defined above
  */
 
-// Your code goes here...
 
+allItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const parentId = item.parentElement.id;
+    const itemId = parseInt(item.id);
+    const direction = parentId === 'main' ? 'toFavs' : 'toMain';
+
+    updateCollections(itemId, direction);
+  });
+});
 
